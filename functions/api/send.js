@@ -12,14 +12,15 @@ export async function onRequestPost(context) {
 
         // Reset time from environment variable
         // Example:
-        // RESET_TIME_MINUTES = 3
+        // 43200 = 30 days
+        // 3 = 3 minutes (testing)
 
         const RESET_TIME =
             parseInt(
                 context.env.RESET_TIME_MINUTES
             ) * 60 * 1000;
 
-        // Fetch existing data from KV
+        // Fetch existing customer data
 
         let existingData =
             await context.env.MESSAGE_COUNTS.get(mobile);
@@ -28,7 +29,7 @@ export async function onRequestPost(context) {
 
         let lastUpdated = now;
 
-        // Parse existing record
+        // Parse customer record
 
         if (existingData) {
 
@@ -39,7 +40,8 @@ export async function onRequestPost(context) {
             lastUpdated =
                 existingData.lastUpdated || now;
 
-            // Reset count if older than configured time
+            // Reset customer count
+            // if inactive beyond reset window
 
             if ((now - lastUpdated) > RESET_TIME) {
 
@@ -47,11 +49,11 @@ export async function onRequestPost(context) {
             }
         }
 
-        // Increment count
+        // Increment journey count
 
         count++;
 
-        // Save updated record
+        // Save updated customer record
 
         await context.env.MESSAGE_COUNTS.put(
             mobile,
@@ -61,7 +63,7 @@ export async function onRequestPost(context) {
             })
         );
 
-        // Function to send WhatsApp template
+        // Reusable WhatsApp sender
 
         async function sendTemplate(templateName) {
 
@@ -70,15 +72,26 @@ export async function onRequestPost(context) {
                 {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${context.env.WHATSAPP_TOKEN}`,
-                        'Content-Type': 'application/json'
+                        'Authorization':
+                            `Bearer ${context.env.WHATSAPP_TOKEN}`,
+
+                        'Content-Type':
+                            'application/json'
                     },
+
                     body: JSON.stringify({
-                        messaging_product: 'whatsapp',
+
+                        messaging_product:
+                            'whatsapp',
+
                         to: mobile,
+
                         type: 'template',
+
                         template: {
+
                             name: templateName,
+
                             language: {
                                 code: 'en_US'
                             }
@@ -88,14 +101,17 @@ export async function onRequestPost(context) {
             );
         }
 
-                // Always send first message
+        // Always send feedback message
 
-        await sendTemplate("hello_world");
+        await sendTemplate(
+            "hello_world"
+        );
 
-        // If count >= 5
-        // send one more hello_world message
+        // Loyalty reward logic
 
-        let secondMessageSent = false;
+        let loyaltyCouponSent = false;
+
+        // 5th journey onwards
 
         if (count >= 5) {
 
@@ -103,26 +119,36 @@ export async function onRequestPost(context) {
                 "hello_world"
             );
 
-            secondMessageSent = true;
+            loyaltyCouponSent = true;
         }
 
-        // Response
+        // Final response
 
         return Response.json({
+
             success: true,
+
             mobile,
-            count,
+
+            journeyCount: count,
+
+            loyaltyCouponSent,
+
             resetTimeMinutes:
-                context.env.RESET_TIME_MINUTES,
-            secondMessageSent
+                context.env.RESET_TIME_MINUTES
+
         });
 
     } catch (error) {
 
         return Response.json({
+
             success: false,
+
             error: error.message
+
         }, {
+
             status: 500
         });
     }
