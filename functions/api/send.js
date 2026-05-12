@@ -88,18 +88,19 @@ export async function onRequestPost(context) {
             );
         }
 
-        // Always send normal template
+                // Always send first message
 
         await sendTemplate("hello_world");
 
-        // Send additional template after 5th occurrence
+        // If count >= 5
+        // send one more hello_world message
 
         let secondMessageSent = false;
 
         if (count >= 5) {
 
             await sendTemplate(
-                "special_followup"
+                "hello_world"
             );
 
             secondMessageSent = true;
