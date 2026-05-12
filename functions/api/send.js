@@ -4,28 +4,35 @@ export async function onRequestPost(context) {
 
         const body = await context.request.json();
 
-        const mobile = body.mobile;
+        const mobile = String(body.mobile).trim();
 
-        // Get current count
+        // Fetch previous count
 
-        let count = await context.env.MESSAGE_COUNTS.get(mobile);
+        let existingCount = await context.env.MESSAGE_COUNTS.get(mobile);
 
-        count = count ? parseInt(count) : 0;
+        existingCount = existingCount
+            ? parseInt(existingCount)
+            : 0;
 
-        count++;
+        // Increment occurrence count
+
+        const updatedCount = existingCount + 1;
 
         // Save updated count
 
         await context.env.MESSAGE_COUNTS.put(
             mobile,
-            count.toString()
+            updatedCount.toString()
         );
 
         // Decide template
 
         let templateName = "hello_world";
 
-        if (count >= 5) {
+        // 5th occurrence onwards
+
+        if (updatedCount >= 5) {
+
             templateName = "hello_world";
         }
 
@@ -58,9 +65,10 @@ export async function onRequestPost(context) {
         return Response.json({
             success: true,
             mobile,
-            count,
+            previousCount: existingCount,
+            currentCount: updatedCount,
             templateUsed: templateName,
-            response: data
+            whatsappResponse: data
         });
 
     } catch (error) {
