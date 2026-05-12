@@ -1,10 +1,92 @@
 *{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  color:white;
+  overflow-x:hidden;
+}
+
+header{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  padding:25px 40px;
+  z-index:100;
+}
+
+.logo-area{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.logo-area img{
+  width:180px;
+  height:auto;
+  object-fit:contain;
+  background:transparent;
+  border-radius:0;
+}
+
+.hero{
+  min-height:100vh;
+  background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.60);
+}
+
+.content{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:550px;
+}
+
+.card{
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(14px);
+  padding:40px;
+  border-radius:25px;
+  box-shadow:0 10px 40px rgba(0,0,0,.25);
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+  line-height:1.4;
+  font-size:38px;
+}
+
+.subtitle{
+  text-align:center;
+  line-height:1.8;
+  margin-bottom:30px;
+  opacity:.9;
+  font-size:15px;
+}
+
 input{
   width:100%;
   padding:16px;
   border:none;
   border-radius:12px;
   margin-bottom:20px;
+  font-size:15px;
 }
 
 button{
@@ -33,6 +115,8 @@ button:hover{
   padding-right:5px;
 }
 
+/* Tablet */
+
 @media(max-width:1024px){
 
 .content{
@@ -46,7 +130,10 @@ button:hover{
 h1{
   font-size:34px;
 }
+
 }
+
+/* Mobile */
 
 @media(max-width:700px){
 
@@ -54,8 +141,12 @@ header{
   padding:20px;
 }
 
-.logo-area h2{
-  font-size:20px;
+.logo-area{
+  justify-content:center;
+}
+
+.logo-area img{
+  width:130px;
 }
 
 .card{
@@ -65,4 +156,13 @@ header{
 h1{
   font-size:24px;
 }
+
+.subtitle{
+  font-size:14px;
+}
+
+button{
+  font-size:15px;
+}
+
 }
