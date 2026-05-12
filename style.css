@@ -1,13 +1,4 @@
 *{
-}
-
-.subtitle{
-  text-align:center;
-  line-height:1.8;
-  margin-bottom:30px;
-  opacity:.9;
-}
-
 input{
   width:100%;
   padding:16px;
@@ -42,6 +33,21 @@ button:hover{
   padding-right:5px;
 }
 
+@media(max-width:1024px){
+
+.content{
+  max-width:90%;
+}
+
+.card{
+  padding:35px;
+}
+
+h1{
+  font-size:34px;
+}
+}
+
 @media(max-width:700px){
 
 header{
@@ -49,14 +55,14 @@ header{
 }
 
 .logo-area h2{
-  font-size:22px;
+  font-size:20px;
 }
 
 .card{
-  padding:25px;
+  padding:22px;
 }
 
 h1{
-  font-size:28px;
+  font-size:24px;
 }
 }
