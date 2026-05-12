@@ -9,6 +9,9 @@ export async function onRequestPost(context) {
         const now = Date.now();
 
         // Reset window
+        // Example:
+        // 3 = 3 minutes
+        // 43200 = 30 days
 
         const RESET_TIME =
             parseInt(
@@ -22,8 +25,7 @@ export async function onRequestPost(context) {
 
         let count = 0;
 
-        // IMPORTANT:
-        // firstJourneyTime stays fixed
+        // Fixed window start time
 
         let firstJourneyTime = now;
 
@@ -36,12 +38,10 @@ export async function onRequestPost(context) {
             firstJourneyTime =
                 existingData.firstJourneyTime || now;
 
-            // Check fixed window expiry
+            // Reset if window expired
 
             if ((now - firstJourneyTime)
                 > RESET_TIME) {
-
-                // RESET EVERYTHING
 
                 count = 0;
 
@@ -49,25 +49,11 @@ export async function onRequestPost(context) {
             }
         }
 
-        // Increment journey count
-
-        count++;
-
-        // Save updated customer data
-
-        await context.env.MESSAGE_COUNTS.put(
-            mobile,
-            JSON.stringify({
-                count,
-                firstJourneyTime
-            })
-        );
-
-        // Reusable sender
+        // Reusable WhatsApp sender
 
         async function sendTemplate(templateName) {
 
-            return await fetch(
+            const response = await fetch(
                 `https://graph.facebook.com/v25.0/${context.env.PHONE_NUMBER_ID}/messages`,
                 {
                     method: 'POST',
@@ -100,17 +86,60 @@ export async function onRequestPost(context) {
                     })
                 }
             );
+
+            return await response.json();
         }
 
-        // Always send feedback
+        // Send feedback message first
 
-        await sendTemplate(
-            "hello_world"
+        const feedbackResponse =
+            await sendTemplate(
+                "hello_world"
+            );
+
+        // Check WhatsApp success
+
+        const messageSentSuccessfully =
+            feedbackResponse.messages &&
+            feedbackResponse.messages.length > 0;
+
+        // Invalid WhatsApp number
+
+        if (!messageSentSuccessfully) {
+
+            return Response.json({
+
+                success: false,
+
+                mobile,
+
+                message:
+                    "Number is not a valid WhatsApp number",
+
+                whatsappResponse:
+                    feedbackResponse
+            });
+        }
+
+        // Increment journey count ONLY after success
+
+        count++;
+
+        // Save updated customer record
+
+        await context.env.MESSAGE_COUNTS.put(
+            mobile,
+            JSON.stringify({
+                count,
+                firstJourneyTime
+            })
         );
+
+        // Loyalty reward logic
 
         let loyaltyCouponSent = false;
 
-        // Loyalty reward
+        // 5th journey onwards
 
         if (count >= 5) {
 
@@ -121,11 +150,15 @@ export async function onRequestPost(context) {
             loyaltyCouponSent = true;
         }
 
+        // Final response
+
         return Response.json({
 
             success: true,
 
             mobile,
+
+            validWhatsAppNumber: true,
 
             journeyCount: count,
 
@@ -135,7 +168,6 @@ export async function onRequestPost(context) {
 
             resetTimeMinutes:
                 context.env.RESET_TIME_MINUTES
-
         });
 
     } catch (error) {
