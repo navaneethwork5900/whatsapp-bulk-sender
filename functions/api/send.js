@@ -6,29 +6,64 @@ export async function onRequestPost(context) {
 
         const mobile = String(body.mobile).trim();
 
-        // Fetch existing count
+        // Current timestamp
 
-        let existingCount =
+        const now = Date.now();
+
+        // Reset time from environment variable
+        // Example:
+        // RESET_TIME_MINUTES = 3
+
+        const RESET_TIME =
+            parseInt(
+                context.env.RESET_TIME_MINUTES
+            ) * 60 * 1000;
+
+        // Fetch existing data from KV
+
+        let existingData =
             await context.env.MESSAGE_COUNTS.get(mobile);
 
-        existingCount = existingCount
-            ? parseInt(existingCount)
-            : 0;
+        let count = 0;
+
+        let lastUpdated = now;
+
+        // Parse existing record
+
+        if (existingData) {
+
+            existingData = JSON.parse(existingData);
+
+            count = existingData.count || 0;
+
+            lastUpdated =
+                existingData.lastUpdated || now;
+
+            // Reset count if older than configured time
+
+            if ((now - lastUpdated) > RESET_TIME) {
+
+                count = 0;
+            }
+        }
 
         // Increment count
 
-        const updatedCount = existingCount + 1;
+        count++;
 
-        // Save updated count
+        // Save updated record
 
         await context.env.MESSAGE_COUNTS.put(
             mobile,
-            updatedCount.toString()
+            JSON.stringify({
+                count,
+                lastUpdated: now
+            })
         );
 
-        // Function to send message
+        // Function to send WhatsApp template
 
-        async function sendTemplateMessage(templateName) {
+        async function sendTemplate(templateName) {
 
             return await fetch(
                 `https://graph.facebook.com/v25.0/${context.env.PHONE_NUMBER_ID}/messages`,
@@ -53,23 +88,32 @@ export async function onRequestPost(context) {
             );
         }
 
-        // Always send first message
+        // Always send normal template
 
-        await sendTemplateMessage("hello_world");
+        await sendTemplate("hello_world");
 
-        // Send second message after 5th occurrence
+        // Send additional template after 5th occurrence
 
-        if (updatedCount >= 5) {
+        let secondMessageSent = false;
 
-            await sendTemplateMessage("hello_world");
+        if (count >= 5) {
+
+            await sendTemplate(
+                "special_followup"
+            );
+
+            secondMessageSent = true;
         }
+
+        // Response
 
         return Response.json({
             success: true,
             mobile,
-            previousCount: existingCount,
-            currentCount: updatedCount,
-            secondMessageSent: updatedCount >= 5
+            count,
+            resetTimeMinutes:
+                context.env.RESET_TIME_MINUTES,
+            secondMessageSent
         });
 
     } catch (error) {
