@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WhatsApp Bulk Sender</title>
+  <title>Susheel Travels | WhatsApp Bulk Sender</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -11,27 +11,41 @@
 </head>
 <body>
 
-<div class="container">
+<header>
+  <div class="logo-area">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg" alt="Susheel Travels Logo">
+    <div>
+      <h2>Susheel Travels</h2>
+      <p>Smart Travel Communication System</p>
+    </div>
+  </div>
+</header>
 
-  <div class="card">
+<section class="hero">
+  <div class="overlay"></div>
 
-    <h1>WhatsApp Bulk Sender</h1>
+  <div class="content">
 
-    <p class="subtitle">
-      Upload Excel file and send WhatsApp template messages.
-    </p>
+    <div class="card">
 
-    <input type="file" id="excelFile" accept=".xlsx,.xls">
+      <h1>WhatsApp Passenger Notification System</h1>
 
-    <button onclick="processExcel()">
-      Send Messages
-    </button>
+      <p class="subtitle">
+        Upload Excel contacts and instantly send travel updates, booking confirmations, pickup alerts, and journey notifications.
+      </p>
 
-    <div id="status"></div>
+      <input type="file" id="excelFile" accept=".xlsx,.xls">
+
+      <button onclick="processExcel()">
+        Send WhatsApp Messages
+      </button>
+
+      <div id="status"></div>
+
+    </div>
 
   </div>
-
-</div>
+</section>
 
 <script src="script.js"></script>
 
