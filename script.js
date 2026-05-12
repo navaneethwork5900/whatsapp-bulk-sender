@@ -1,59 +1,81 @@
 async function processExcel() {
 
-    const fileInput = document.getElementById('excelFile');
+        const worksheet =
+            workbook.Sheets[sheetName];
 
-    const file = fileInput.files[0];
+        const jsonData = XLSX.utils.sheet_to_json(
+            worksheet
+        );
 
-    if (!file) {
-        alert('Please upload an Excel file');
-        return;
-    }
+        // Remove duplicate numbers
 
-    const data = await file.arrayBuffer();
+        const uniqueNumbers = [
+            ...new Set(
+                jsonData.map(
+                    row => String(row.mobile).trim()
+                )
+            )
+        ];
 
-    const workbook = XLSX.read(data);
+        for (const mobile of uniqueNumbers) {
 
-    const sheetName = workbook.SheetNames[0];
+            try {
 
-    const worksheet = workbook.Sheets[sheetName];
+                const response = await fetch(
+                    '/api/send',
+                    {
+                        method: 'POST',
 
-    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                        headers: {
+                            'Content-Type':
+                                'application/json'
+                        },
 
-    const statusDiv = document.getElementById('status');
+                        body: JSON.stringify({
+                            mobile
+                        })
+                    }
+                );
 
-    statusDiv.innerHTML = 'Sending messages...<br><br>';
+                const result =
+                    await response.json();
 
-    for (const row of jsonData) {
+                // Success
 
-        const mobile = row.mobile;
+                if (result.success) {
 
-        if (!mobile) continue;
+                    statusDiv.innerHTML += `
+                        <div style="margin-bottom:15px;padding:15px;border-radius:10px;background:rgba(0,255,100,.15);border:1px solid rgba(0,255,100,.3);">
+                            ✅ ${mobile}<br>
+                            Journey Count: ${result.journeyCount}<br>
+                            Loyalty Coupon: ${result.loyaltyCouponSent ? 'YES 🎉' : 'NO'}
+                        </div>
+                    `;
+                }
 
-        try {
+                // Invalid WhatsApp number
 
-            const response = await fetch('/api/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    mobile: String(mobile)
-                })
-            });
+                else {
 
-            const result = await response.json();
+                    statusDiv.innerHTML += `
+                        <div style="margin-bottom:15px;padding:15px;border-radius:10px;background:rgba(255,0,0,.15);border:1px solid rgba(255,0,0,.3);">
+                            ❌ ${mobile}<br>
+                            ${result.message || 'Invalid WhatsApp Number'}
+                        </div>
+                    `;
+                }
 
-            console.log(result);
+            } catch (error) {
 
-            statusDiv.innerHTML += `✅ Sent to ${mobile}<br>`;
-
-        } catch (error) {
-
-            console.error(error);
-
-            statusDiv.innerHTML += `❌ Failed ${mobile}<br>`;
+                statusDiv.innerHTML += `
+                    <div style="margin-bottom:15px;padding:15px;border-radius:10px;background:rgba(255,0,0,.15);border:1px solid rgba(255,0,0,.3);">
+                        ❌ ${mobile}<br>
+                        ${error.message}
+                    </div>
+                `;
+            }
         }
-    }
+    };
 
-    statusDiv.innerHTML += '<br>🎉 Completed';
+    reader.readAsArrayBuffer(file);
 }
