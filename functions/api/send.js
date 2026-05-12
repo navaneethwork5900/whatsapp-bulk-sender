@@ -6,6 +6,31 @@ export async function onRequestPost(context) {
 
         const mobile = body.mobile;
 
+        // Get current count
+
+        let count = await context.env.MESSAGE_COUNTS.get(mobile);
+
+        count = count ? parseInt(count) : 0;
+
+        count++;
+
+        // Save updated count
+
+        await context.env.MESSAGE_COUNTS.put(
+            mobile,
+            count.toString()
+        );
+
+        // Decide template
+
+        let templateName = "hello_world";
+
+        if (count >= 5) {
+            templateName = "hello_world";
+        }
+
+        // Send WhatsApp message
+
         const response = await fetch(
             `https://graph.facebook.com/v25.0/${context.env.PHONE_NUMBER_ID}/messages`,
             {
@@ -19,7 +44,7 @@ export async function onRequestPost(context) {
                     to: mobile,
                     type: 'template',
                     template: {
-                        name: 'hello_world',
+                        name: templateName,
                         language: {
                             code: 'en_US'
                         }
@@ -30,7 +55,13 @@ export async function onRequestPost(context) {
 
         const data = await response.json();
 
-        return Response.json(data);
+        return Response.json({
+            success: true,
+            mobile,
+            count,
+            templateUsed: templateName,
+            response: data
+        });
 
     } catch (error) {
 
