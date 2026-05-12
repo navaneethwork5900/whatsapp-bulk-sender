@@ -6,30 +6,26 @@ export async function onRequestPost(context) {
 
         const mobile = String(body.mobile).trim();
 
-        // Current timestamp
-
         const now = Date.now();
 
-        // Reset time from environment variable
-        // Example:
-        // 43200 = 30 days
-        // 3 = 3 minutes (testing)
+        // Reset window
 
         const RESET_TIME =
             parseInt(
                 context.env.RESET_TIME_MINUTES
             ) * 60 * 1000;
 
-        // Fetch existing customer data
+        // Fetch customer data
 
         let existingData =
             await context.env.MESSAGE_COUNTS.get(mobile);
 
         let count = 0;
 
-        let lastUpdated = now;
+        // IMPORTANT:
+        // firstJourneyTime stays fixed
 
-        // Parse customer record
+        let firstJourneyTime = now;
 
         if (existingData) {
 
@@ -37,15 +33,19 @@ export async function onRequestPost(context) {
 
             count = existingData.count || 0;
 
-            lastUpdated =
-                existingData.lastUpdated || now;
+            firstJourneyTime =
+                existingData.firstJourneyTime || now;
 
-            // Reset customer count
-            // if inactive beyond reset window
+            // Check fixed window expiry
 
-            if ((now - lastUpdated) > RESET_TIME) {
+            if ((now - firstJourneyTime)
+                > RESET_TIME) {
+
+                // RESET EVERYTHING
 
                 count = 0;
+
+                firstJourneyTime = now;
             }
         }
 
@@ -53,17 +53,17 @@ export async function onRequestPost(context) {
 
         count++;
 
-        // Save updated customer record
+        // Save updated customer data
 
         await context.env.MESSAGE_COUNTS.put(
             mobile,
             JSON.stringify({
                 count,
-                lastUpdated: now
+                firstJourneyTime
             })
         );
 
-        // Reusable WhatsApp sender
+        // Reusable sender
 
         async function sendTemplate(templateName) {
 
@@ -71,6 +71,7 @@ export async function onRequestPost(context) {
                 `https://graph.facebook.com/v25.0/${context.env.PHONE_NUMBER_ID}/messages`,
                 {
                     method: 'POST',
+
                     headers: {
                         'Authorization':
                             `Bearer ${context.env.WHATSAPP_TOKEN}`,
@@ -101,17 +102,15 @@ export async function onRequestPost(context) {
             );
         }
 
-        // Always send feedback message
+        // Always send feedback
 
         await sendTemplate(
             "hello_world"
         );
 
-        // Loyalty reward logic
-
         let loyaltyCouponSent = false;
 
-        // 5th journey onwards
+        // Loyalty reward
 
         if (count >= 5) {
 
@@ -122,8 +121,6 @@ export async function onRequestPost(context) {
             loyaltyCouponSent = true;
         }
 
-        // Final response
-
         return Response.json({
 
             success: true,
@@ -133,6 +130,8 @@ export async function onRequestPost(context) {
             journeyCount: count,
 
             loyaltyCouponSent,
+
+            firstJourneyTime,
 
             resetTimeMinutes:
                 context.env.RESET_TIME_MINUTES
