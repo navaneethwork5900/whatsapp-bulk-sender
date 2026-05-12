@@ -1,65 +1,62 @@
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-body{
-  font-family:Arial,sans-serif;
-  background:#f5f7fb;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-}
-
-.container{
-  width:100%;
-  max-width:500px;
-  padding:20px;
-}
-
-.card{
-  background:white;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-h1{
-  text-align:center;
-  margin-bottom:10px;
 }
 
 .subtitle{
   text-align:center;
+  line-height:1.8;
   margin-bottom:30px;
-  color:#666;
-  line-height:1.7;
+  opacity:.9;
 }
 
 input{
   width:100%;
-  padding:14px;
+  padding:16px;
+  border:none;
+  border-radius:12px;
   margin-bottom:20px;
 }
 
 button{
   width:100%;
-  padding:15px;
+  padding:16px;
   border:none;
   border-radius:12px;
-  background:#0e3b63;
+  background:#00b894;
   color:white;
   font-size:16px;
   cursor:pointer;
+  transition:.3s;
+  font-weight:bold;
 }
 
 button:hover{
-  background:#155286;
+  background:#00a383;
+  transform:translateY(-2px);
 }
 
 #status{
-  margin-top:20px;
+  margin-top:25px;
   line-height:1.9;
+  max-height:250px;
+  overflow:auto;
+  padding-right:5px;
+}
+
+@media(max-width:700px){
+
+header{
+  padding:20px;
+}
+
+.logo-area h2{
+  font-size:22px;
+}
+
+.card{
+  padding:25px;
+}
+
+h1{
+  font-size:28px;
+}
 }
