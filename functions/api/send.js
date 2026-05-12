@@ -31,13 +31,23 @@ export async function onRequestPost(context) {
 
         if (existingData) {
 
-            existingData = JSON.parse(existingData);
+            try {
 
-            count = existingData.count || 0;
+    existingData = JSON.parse(existingData);
 
-            firstJourneyTime =
-                existingData.firstJourneyTime || now;
+    count = existingData.count || 0;
 
+    firstJourneyTime =
+        existingData.firstJourneyTime || now;
+
+} catch {
+
+    // Old numeric format support
+
+    count = parseInt(existingData) || 0;
+
+    firstJourneyTime = now;
+}
             // Reset if window expired
 
             if ((now - firstJourneyTime)
