@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Susheel Travels</h2>
+    <a href="#">Dashboard</a>
+    <a href="#">Passengers</a>
+    <a href="#">Loyalty</a>
+    <a href="#">Analytics</a>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main-content">
+    <h1>Enterprise Dashboard</h1>
+
+    <div class="cards">
+      <div class="card">
+        <h2 id="totalMessages">0</h2>
+        <p>Messages Sent</p>
+      </div>
+
+      <div class="card">
+        <h2 id="loyaltyCustomers">0</h2>
+        <p>Loyalty Customers</p>
+      </div>
+
+      <div class="card">
+        <h2 id="activePassengers">0</h2>
+        <p>Active Passengers</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
