@@ -34,4 +34,156 @@
     <!-- NAVBAR -->
 
     <nav class="navbar">
+
+        <div class="nav-left">
+
+            <img
+                src="./assets/logo.png"
+                class="logo"
+                alt="Susheel Travels"
+            >
+
+        </div>
+
+        <div class="nav-right">
+
+            <a href="#">
+                Home
+            </a>
+
+            <a href="#">
+                Routes
+            </a>
+
+            <a href="#">
+                Loyalty
+            </a>
+
+            <a href="#">
+                Support
+            </a>
+
+        </div>
+
+    </nav>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="overlay"></div>
+
+        <div class="hero-content">
+
+            <div class="hero-left">
+
+                <span class="badge">
+                    Premium Sleeper Experience
+                </span>
+
+                <h1>
+                    Safe Journeys.
+                    Trusted Travels.
+                </h1>
+
+                <p>
+                    Luxury travel experience with automated passenger feedback,
+                    loyalty rewards, and WhatsApp communication.
+                </p>
+
+                <div class="stats">
+
+                    <div class="stat-card">
+                        <h2>10K+</h2>
+                        <span>Passengers</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h2>24/7</h2>
+                        <span>Support</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h2>50%</h2>
+                        <span>Loyalty Rewards</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- UPLOAD PANEL -->
+
+            <div class="upload-card">
+
+                <h3>
+                    Passenger Feedback Automation
+                </h3>
+
+                <p>
+                    Upload completed journey passenger data.
+                    System automatically sends:
+                </p>
+
+                <ul>
+                    <li>WhatsApp feedback requests</li>
+                    <li>Loyalty rewards</li>
+                    <li>Frequent traveler offers</li>
+                </ul>
+
+                <input
+                    type="file"
+                    id="excelFile"
+                    accept=".xlsx,.xls"
+                >
+
+                <button onclick="processExcel()">
+                    Send WhatsApp Messages
+                </button>
+
+                <div id="status"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FEATURES -->
+
+    <section class="features">
+
+        <div class="feature-card">
+            <h3>
+                Smart Loyalty Tracking
+            </h3>
+            <p>
+                Automatically identify repeat travelers and reward them.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>
+                WhatsApp Automation
+            </h3>
+            <p>
+                Instantly send feedback messages after every journey.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>
+                Passenger Analytics
+            </h3>
+            <p>
+                Track engagement and build customer loyalty effectively.
+            </p>
+        </div>
+
+    </section>
+
+    <script src="script.js"></script>
+
+</body>
+
 </html>
