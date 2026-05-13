@@ -22,28 +22,35 @@ export async function onRequestGet(context) {
         passengers.push({
           mobile: key.name,
           count: parsed.count || 0,
-          firstJourneyTime: parsed.firstJourneyTime || Date.now()
+          firstJourneyTime: parsed.firstJourneyTime || Date.now(),
+          loyaltyPassProvidedAt: parsed.loyaltyPassProvidedAt || null
         });
       } catch {
-        passengers.push({ mobile: key.name, count: Number(value) || 0, firstJourneyTime: Date.now() });
+        passengers.push({ mobile: key.name, count: Number(value) || 0, firstJourneyTime: Date.now(), loyaltyPassProvidedAt: null });
       }
     }
     cursor = listResult.cursor;
     if (listResult.list_complete) break;
   } while (cursor);
 
-  const loyaltyPassengers = passengers.filter(p => p.count >= 5).sort((a, b) => b.count - a.count);
-
+  const loyaltyEligiblePassengers = passengers.filter((p) => p.count >= 4).sort((a, b) => b.count - a.count);
+  const loyaltyProvidedPassengers = passengers.filter((p) => !!p.loyaltyPassProvidedAt).sort((a, b) => b.count - a.count);
+  const firstTimePassengers = passengers.filter((p) => p.count === 1);
+  const repeatPassengers = passengers.filter((p) => p.count >= 2);
   const totalMessages = passengers.reduce((acc, p) => acc + p.count, 0);
 
   return Response.json({
     success: true,
     analytics: {
       totalMessages,
-      loyaltyCustomers: loyaltyPassengers.length,
+      loyaltyEligibleCustomers: loyaltyEligiblePassengers.length,
+      loyaltyPassProvidedCustomers: loyaltyProvidedPassengers.length,
+      firstTimeCustomers: firstTimePassengers.length,
+      repeatCustomers: repeatPassengers.length,
       activePassengers: passengers.length
     },
     passengers: passengers.sort((a, b) => b.count - a.count),
-    loyaltyPassengers
+    loyaltyEligiblePassengers,
+    loyaltyProvidedPassengers
   });
 }

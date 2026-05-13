@@ -12,23 +12,28 @@
     <h2>Susheel Travels</h2>
     <button class="nav-link active" data-section="dashboardSection">Dashboard</button>
     <button class="nav-link" data-section="passengersSection">Passengers</button>
-    <button class="nav-link" data-section="loyaltySection">Loyalty</button>
+    <button class="nav-link" data-section="loyaltyEligibleSection">Loyalty Eligible</button>
+    <button class="nav-link" data-section="loyaltyProvidedSection">Loyalty Provided</button>
     <button class="nav-link" data-section="analyticsSection">Analytics</button>
     <button onclick="logout()">Logout</button>
   </div>
 
   <div class="main-content">
-    <h1>Enterprise Dashboard</h1>
+    <h1>Enterprise Loyalty Operations Dashboard</h1>
 
     <section id="dashboardSection" class="section active">
       <div class="cards">
-        <div class="card"><h2 id="totalMessages">0</h2><p>Messages Sent</p></div>
-        <div class="card"><h2 id="loyaltyCustomers">0</h2><p>Loyalty Customers</p></div>
-        <div class="card"><h2 id="activePassengers">0</h2><p>Active Passengers</p></div>
+        <div class="card"><h2 id="totalMessages">0</h2><p>Journeys Tracked</p></div>
+        <div class="card"><h2 id="firstTimeCustomers">0</h2><p>First-Time Customers</p></div>
+        <div class="card"><h2 id="repeatCustomers">0</h2><p>Repeat Customers</p></div>
+        <div class="card"><h2 id="loyaltyEligibleCustomers">0</h2><p>Loyalty Eligible (Count ≥ 4)</p></div>
+        <div class="card"><h2 id="loyaltyProvidedCustomers">0</h2><p>Loyalty Pass Sent</p></div>
+        <div class="card"><h2 id="activePassengers">0</h2><p>Unique Passengers</p></div>
       </div>
 
       <div class="upload-card">
         <h3>Upload Excel</h3>
+        <p>Rule: First message always sends <b>hello_world</b>. If count is <b>4 or more</b>, system sends one extra hello_world as loyalty pass.</p>
         <input type="file" id="excelFile" accept=".xlsx,.xls" />
         <button id="processBtn">Process & Send</button>
         <div id="status"></div>
@@ -40,9 +45,14 @@
       <div id="passengersTable"></div>
     </section>
 
-    <section id="loyaltySection" class="section">
-      <h3>Loyalty Pass Eligible (5+ journeys)</h3>
-      <div id="loyaltyTable"></div>
+    <section id="loyaltyEligibleSection" class="section">
+      <h3>Loyalty Eligible (Count ≥ 4)</h3>
+      <div id="loyaltyEligibleTable"></div>
+    </section>
+
+    <section id="loyaltyProvidedSection" class="section">
+      <h3>Loyalty Pass Provided</h3>
+      <div id="loyaltyProvidedTable"></div>
     </section>
 
     <section id="analyticsSection" class="section">

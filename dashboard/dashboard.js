@@ -23,12 +23,16 @@ async function fetchAnalytics() {
   if (!result.success) return;
 
   document.getElementById('totalMessages').textContent = result.analytics.totalMessages;
-  document.getElementById('loyaltyCustomers').textContent = result.analytics.loyaltyCustomers;
+  document.getElementById('loyaltyEligibleCustomers').textContent = result.analytics.loyaltyEligibleCustomers;
+  document.getElementById('loyaltyProvidedCustomers').textContent = result.analytics.loyaltyPassProvidedCustomers;
+  document.getElementById('firstTimeCustomers').textContent = result.analytics.firstTimeCustomers;
+  document.getElementById('repeatCustomers').textContent = result.analytics.repeatCustomers;
   document.getElementById('activePassengers').textContent = result.analytics.activePassengers;
   document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleString()}`;
 
-  renderTable('passengersTable', result.passengers, ['mobile', 'count', 'firstJourneyTime']);
-  renderTable('loyaltyTable', result.loyaltyPassengers, ['mobile', 'count', 'firstJourneyTime']);
+  renderTable('passengersTable', result.passengers, ['mobile', 'count', 'firstJourneyTime', 'loyaltyPassProvidedAt']);
+  renderTable('loyaltyEligibleTable', result.loyaltyEligiblePassengers, ['mobile', 'count', 'firstJourneyTime']);
+  renderTable('loyaltyProvidedTable', result.loyaltyProvidedPassengers, ['mobile', 'count', 'loyaltyPassProvidedAt']);
 }
 
 function renderTable(targetId, rows, columns) {
@@ -38,11 +42,11 @@ function renderTable(targetId, rows, columns) {
     return;
   }
 
-  const head = columns.map(col => `<th>${col}</th>`).join('');
-  const body = rows.map(row => `
-    <tr>${columns.map(col => {
-      if (col === 'firstJourneyTime') {
-        return `<td>${new Date(row[col]).toLocaleString()}</td>`;
+  const head = columns.map((col) => `<th>${col}</th>`).join('');
+  const body = rows.map((row) => `
+    <tr>${columns.map((col) => {
+      if (col === 'firstJourneyTime' || col === 'loyaltyPassProvidedAt') {
+        return `<td>${row[col] ? new Date(row[col]).toLocaleString() : '-'}</td>`;
       }
       return `<td>${row[col]}</td>`;
     }).join('')}</tr>
@@ -69,7 +73,7 @@ async function processExcel() {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-    const uniqueNumbers = [...new Set(jsonData.map(row => String(row.mobile ?? '').trim()).filter(Boolean))];
+    const uniqueNumbers = [...new Set(jsonData.map((row) => String(row.mobile ?? '').trim()).filter(Boolean))];
 
     for (const mobile of uniqueNumbers) {
       try {
@@ -84,7 +88,10 @@ async function processExcel() {
 
         const result = await response.json();
         const ok = result.success;
-        statusDiv.innerHTML += `<div class="status ${ok ? 'success' : 'error'}">${ok ? '✅' : '❌'} ${mobile} - ${result.message || `Journey Count: ${result.journeyCount}, Loyalty: ${result.loyaltyCouponSent ? 'YES' : 'NO'}`}</div>`;
+        const message = ok
+          ? `Count: ${result.journeyCount} | First Time: ${result.isFirstJourney ? 'YES' : 'NO'} | Loyalty Pass Sent: ${result.loyaltyCouponSent ? 'YES' : 'NO'}`
+          : (result.message || 'Failed');
+        statusDiv.innerHTML += `<div class="status ${ok ? 'success' : 'error'}">${ok ? '✅' : '❌'} ${mobile} - ${message}</div>`;
       } catch (error) {
         statusDiv.innerHTML += `<div class="status error">❌ ${mobile} - ${error.message}</div>`;
       }
@@ -100,10 +107,10 @@ function setupNavigation() {
   const links = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('.section');
 
-  links.forEach(link => {
+  links.forEach((link) => {
     link.addEventListener('click', () => {
-      links.forEach(l => l.classList.remove('active'));
-      sections.forEach(s => s.classList.remove('active'));
+      links.forEach((l) => l.classList.remove('active'));
+      sections.forEach((s) => s.classList.remove('active'));
       link.classList.add('active');
       document.getElementById(link.dataset.section).classList.add('active');
     });
