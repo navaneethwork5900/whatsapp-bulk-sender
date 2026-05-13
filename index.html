@@ -1,51 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Susheel Travels | WhatsApp Bulk Sender</title>
 
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
 
-  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>
+        Susheel Travels
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 </head>
+
 <body>
 
-<header>
-  <div class="logo-area">
-    <img src="./assets/logo.png" alt="Susheel Travels Logo">
-  </div>
-</header>
+    <!-- HERO -->
 
-<section class="hero">
+    <section class="hero">
 
-  <div class="overlay"></div>
+        <div class="overlay"></div>
 
-  <div class="content">
+        <header>
 
-    <div class="card">
+            <img
+                src="./assets/logo.png"
+                class="logo"
+                alt="Susheel Travels"
+            >
 
-      <h1>WhatsApp Passenger Notification System</h1>
+        </header>
 
-      <p class="subtitle">
-        Upload Excel contacts and instantly send travel updates, booking confirmations, pickup alerts, and journey notifications.
-      </p>
+        <div class="hero-content">
 
-      <input type="file" id="excelFile" accept=".xlsx,.xls">
+            <div class="glass-card">
 
-      <button onclick="processExcel()">
-        Send WhatsApp Messages
-      </button>
+                <h1>
+                    Susheel Travels
+                </h1>
 
-      <div id="status"></div>
+                <p class="tagline">
+                    Passenger Feedback & Loyalty System
+                </p>
 
-    </div>
+                <p class="description">
+                    Upload passenger journey data and
+                    automatically send feedback requests
+                    and loyalty rewards through WhatsApp.
+                </p>
 
-  </div>
+                <input
+                    type="file"
+                    id="excelFile"
+                    accept=".xlsx,.xls"
+                >
 
-</section>
+                <button onclick="processExcel()">
+                    Send WhatsApp Messages
+                </button>
 
-<script src="script.js"></script>
+                <div id="status"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- GALLERY -->
+
+    <section class="gallery-section">
+
+        <h2>
+            Experience Luxury Travel
+        </h2>
+
+        <div class="gallery-grid">
+
+            <img
+                src="./assets/gallery-1.png"
+                alt="Gallery 1"
+            >
+
+            <img
+                src="./assets/gallery-2.png"
+                alt="Gallery 2"
+            >
+
+            <img
+                src="./assets/gallery-3.png"
+                alt="Gallery 3"
+            >
+
+            <img
+                src="./assets/gallery-4.png"
+                alt="Gallery 4"
+            >
+
+        </div>
+
+    </section>
+
+    <script src="script.js"></script>
 
 </body>
+
 </html>
