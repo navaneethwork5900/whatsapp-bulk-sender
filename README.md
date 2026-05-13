@@ -22,8 +22,13 @@ Settings → Environment Variables
 Add:
 WHATSAPP_TOKEN = YOUR_TOKEN
 PHONE_NUMBER_ID = YOUR_PHONE_NUMBER_ID
+ADMIN_EMAIL = your-admin@email.com
+ADMIN_PASSWORD = your-secure-password
 
 7. Redeploy
+
+If `ADMIN_EMAIL` or `ADMIN_PASSWORD` is missing, `/api/login` will return:
+`Server credentials are not configured...`
 
 ---
 

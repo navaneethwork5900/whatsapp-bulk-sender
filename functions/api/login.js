@@ -12,7 +12,8 @@ export async function onRequestPost(context) {
       return Response.json(
         {
           success: false,
-          message: 'Server credentials are not configured'
+          message:
+            'Server credentials are not configured. Please set ADMIN_EMAIL and ADMIN_PASSWORD environment variables.'
         },
         {
           status: 500
