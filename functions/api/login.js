@@ -1,31 +1,39 @@
 export async function onRequestPost(context) {
+
   try {
-    const body = await context.request.json();
 
-    const email = (body.email ?? '').trim().toLowerCase();
-    const password = (body.password ?? '').trim();
+    const body =
+      await context.request.json();
 
-    const validEmail = (context.env.ADMIN_EMAIL ?? '').trim().toLowerCase();
-    const validPassword = (context.env.ADMIN_PASSWORD ?? '').trim();
+    const email =
+      (body.email ?? '')
+      .trim()
+      .toLowerCase();
 
-    if (!validEmail || !validPassword) {
+    const password =
+      (body.password ?? '')
+      .trim();
+
+    // HARDCODED LOGIN
+
+    const validEmail =
+      'balaji010501@gmail.com';
+
+    const validPassword =
+      'Balaji@123';
+
+    // VALIDATE
+
+    if (
+      email !== validEmail ||
+      password !== validPassword
+    ) {
+
       return Response.json(
         {
           success: false,
           message:
-            'Server credentials are not configured. Please set ADMIN_EMAIL and ADMIN_PASSWORD environment variables.'
-        },
-        {
-          status: 500
-        }
-      );
-    }
-
-    if (email !== validEmail || password !== validPassword) {
-      return Response.json(
-        {
-          success: false,
-          message: 'Invalid credentials'
+            'Invalid credentials'
         },
         {
           status: 401
@@ -33,11 +41,16 @@ export async function onRequestPost(context) {
       );
     }
 
+    // SUCCESS
+
     return Response.json({
       success: true,
-      token: 'susheel-admin-auth'
+      token:
+        'susheel-admin-auth'
     });
+
   } catch (error) {
+
     return Response.json(
       {
         success: false,
