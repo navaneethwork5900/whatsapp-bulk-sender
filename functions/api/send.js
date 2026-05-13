@@ -1,5 +1,11 @@
 export async function onRequestPost(context) {
 
+    const token = context.request.headers.get('Authorization');
+
+    if (token !== 'Bearer susheel-admin-auth') {
+        return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
 
         const whatsappToken = (context.env.WHATSAPP_TOKEN ?? '').trim();

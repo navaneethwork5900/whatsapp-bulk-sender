@@ -5,36 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" href="dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="sidebar">
     <h2>Susheel Travels</h2>
-    <a href="#">Dashboard</a>
-    <a href="#">Passengers</a>
-    <a href="#">Loyalty</a>
-    <a href="#">Analytics</a>
+    <button class="nav-link active" data-section="dashboardSection">Dashboard</button>
+    <button class="nav-link" data-section="passengersSection">Passengers</button>
+    <button class="nav-link" data-section="loyaltySection">Loyalty</button>
+    <button class="nav-link" data-section="analyticsSection">Analytics</button>
     <button onclick="logout()">Logout</button>
   </div>
 
   <div class="main-content">
     <h1>Enterprise Dashboard</h1>
 
-    <div class="cards">
-      <div class="card">
-        <h2 id="totalMessages">0</h2>
-        <p>Messages Sent</p>
+    <section id="dashboardSection" class="section active">
+      <div class="cards">
+        <div class="card"><h2 id="totalMessages">0</h2><p>Messages Sent</p></div>
+        <div class="card"><h2 id="loyaltyCustomers">0</h2><p>Loyalty Customers</p></div>
+        <div class="card"><h2 id="activePassengers">0</h2><p>Active Passengers</p></div>
       </div>
 
-      <div class="card">
-        <h2 id="loyaltyCustomers">0</h2>
-        <p>Loyalty Customers</p>
+      <div class="upload-card">
+        <h3>Upload Excel</h3>
+        <input type="file" id="excelFile" accept=".xlsx,.xls" />
+        <button id="processBtn">Process & Send</button>
+        <div id="status"></div>
       </div>
+    </section>
 
-      <div class="card">
-        <h2 id="activePassengers">0</h2>
-        <p>Active Passengers</p>
-      </div>
-    </div>
+    <section id="passengersSection" class="section">
+      <h3>Passengers</h3>
+      <div id="passengersTable"></div>
+    </section>
+
+    <section id="loyaltySection" class="section">
+      <h3>Loyalty Pass Eligible (5+ journeys)</h3>
+      <div id="loyaltyTable"></div>
+    </section>
+
+    <section id="analyticsSection" class="section">
+      <h3>Analytics</h3>
+      <p id="lastUpdated">Last updated: -</p>
+    </section>
   </div>
 
   <script src="dashboard.js"></script>
