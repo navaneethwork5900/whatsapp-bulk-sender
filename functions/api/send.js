@@ -2,6 +2,54 @@ export async function onRequestPost(context) {
 
     try {
 
+        const whatsappToken = (context.env.WHATSAPP_TOKEN ?? '').trim();
+        const phoneNumberId = (context.env.PHONE_NUMBER_ID ?? '').trim();
+        const resetTimeMinutes = parseInt(context.env.RESET_TIME_MINUTES, 10);
+
+        if (!whatsappToken || !phoneNumberId) {
+
+            return Response.json({
+
+                success: false,
+
+                message:
+                    'Missing required environment variables. Please set WHATSAPP_TOKEN and PHONE_NUMBER_ID in Cloudflare Pages.',
+
+                missing: {
+                    WHATSAPP_TOKEN: !whatsappToken,
+                    PHONE_NUMBER_ID: !phoneNumberId
+                }
+            }, {
+                status: 500
+            });
+        }
+
+        if (!Number.isFinite(resetTimeMinutes) || resetTimeMinutes <= 0) {
+
+            return Response.json({
+
+                success: false,
+
+                message:
+                    'Invalid RESET_TIME_MINUTES. Please set a positive number in Cloudflare Pages.'
+            }, {
+                status: 500
+            });
+        }
+
+        if (!context.env.MESSAGE_COUNTS) {
+
+            return Response.json({
+
+                success: false,
+
+                message:
+                    'KV binding MESSAGE_COUNTS is missing. Add it under Settings → Bindings → Pages Functions.'
+            }, {
+                status: 500
+            });
+        }
+
         const body = await context.request.json();
 
         const mobile = String(body.mobile).trim();
@@ -14,9 +62,7 @@ export async function onRequestPost(context) {
         // 43200 = 30 days
 
         const RESET_TIME =
-            parseInt(
-                context.env.RESET_TIME_MINUTES
-            ) * 60 * 1000;
+            resetTimeMinutes * 60 * 1000;
 
         // Fetch customer data
 
@@ -64,13 +110,13 @@ export async function onRequestPost(context) {
         async function sendTemplate(templateName) {
 
             const response = await fetch(
-                `https://graph.facebook.com/v25.0/${context.env.PHONE_NUMBER_ID}/messages`,
+                `https://graph.facebook.com/v25.0/${phoneNumberId}/messages`,
                 {
                     method: 'POST',
 
                     headers: {
                         'Authorization':
-                            `Bearer ${context.env.WHATSAPP_TOKEN}`,
+                            `Bearer ${whatsappToken}`,
 
                         'Content-Type':
                             'application/json'

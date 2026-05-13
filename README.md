@@ -27,6 +27,17 @@ ADMIN_PASSWORD = your-secure-password
 
 7. Redeploy
 
+### If it still does not work after adding variables
+
+Cloudflare Pages does **not** always apply newly added secrets to already-running deployments.
+
+1. Go to **Deployments** and trigger a **new production deploy**.
+2. Confirm `PHONE_NUMBER_ID` is the numeric WhatsApp sender phone number ID (not your business account ID).
+3. Confirm `WHATSAPP_TOKEN` is a valid Meta Graph API token with WhatsApp message permissions.
+4. Confirm KV binding name is exactly `MESSAGE_COUNTS` under **Settings → Bindings → Pages Functions**.
+
+`/api/send` now returns clear setup errors for missing vars, invalid reset time, or missing KV binding.
+
 If `ADMIN_EMAIL` or `ADMIN_PASSWORD` is missing, `/api/login` will return:
 `Server credentials are not configured...`
 
