@@ -19,66 +19,19 @@
         href="style.css"
     >
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 </head>
 
 <body>
 
-    <!-- HERO -->
+    <!-- NAVBAR -->
 
-    <section class="hero">
-
-        <div class="overlay"></div>
-
-        <header>
-
-            <img
-                src="./assets/logo.png"
-                class="logo"
-                alt="Susheel Travels"
-            >
-
-        </header>
-
-        <div class="hero-content">
-
-            <div class="glass-card">
-
-                <h1>
-                    Susheel Travels
-                </h1>
-
-                <p class="tagline">
-                    Passenger Feedback & Loyalty System
-                </p>
-
-                <p class="description">
-                    Upload completed passenger journey data
-                    and automatically send WhatsApp feedback
-                    requests and loyalty rewards.
-                </p>
-
-                <input
-                    type="file"
-                    id="excelFile"
-                    accept=".xlsx,.xls"
-                >
-
-                <button onclick="processExcel()">
-                    Send WhatsApp Messages
-                </button>
-
-                <div id="status"></div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <script src="script.js"></script>
-
-</body>
-
+    <nav class="navbar">
 </html>
