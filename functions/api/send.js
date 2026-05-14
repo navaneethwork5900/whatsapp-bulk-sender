@@ -85,7 +85,7 @@ export async function onRequestPost(context) {
       return await response.json();
     }
 
-    const firstMessageResponse = await sendTemplate('hello_world');
+    const firstMessageResponse = await sendTemplate('susheel_travels');
     const firstMessageOk = firstMessageResponse.messages && firstMessageResponse.messages.length > 0;
 
     if (!firstMessageOk) {
