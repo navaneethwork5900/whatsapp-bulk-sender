@@ -103,7 +103,7 @@ export async function onRequestPost(context) {
     let loyaltyResponse = null;
 
     if (count >= 4) {
-      loyaltyResponse = await sendTemplate('hello_world');
+      loyaltyResponse = await sendTemplate('susheel_travels');
       loyaltyCouponSent = !!(loyaltyResponse.messages && loyaltyResponse.messages.length > 0);
       if (loyaltyCouponSent && !loyaltyPassProvidedAt) {
         loyaltyPassProvidedAt = now;
